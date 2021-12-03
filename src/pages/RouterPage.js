@@ -3,9 +3,7 @@ import { Layout, Menu } from 'antd';
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
   Link,
-  Navigate ,
   Redirect,
   Switch
 } from 'react-router-dom';
@@ -21,7 +19,7 @@ import { CrearTicket } from './CrearTicket';
 import { Escritorio } from './Escritorio';
 import {UiContext} from '../context/UiContext';
 
-const { Header, Sider, Content } = Layout;
+const {  Sider, Content } = Layout;
 
 
 export const RouterPage = () => {

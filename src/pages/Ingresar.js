@@ -1,12 +1,17 @@
-import React from 'react'
-import { Form, Input, Button, Checkbox, InputNumber ,Typography, Divider} from 'antd';
+import React, { useState } from 'react'
+import { Form, Input, Button, InputNumber ,Typography, Divider} from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory,Redirect } from 'react-router-dom';
 import { useHideMenu } from '../hooks/useHideMenu';
+import { getUsuarioStorage } from '../helpers/getUsuarios';
 
 export const Ingresar = () => {
     useHideMenu(false);
     const history = useHistory();
+    const [usuario] = useState(getUsuarioStorage())
+
+
+
     const {Text,Title} = Typography;
 
     const layout = {
@@ -21,12 +26,18 @@ export const Ingresar = () => {
     const onFinish = (values) => {
         //console.log('Success:', values);
         //console.log(history);
+        localStorage.setItem('agente',values.agente);
+        localStorage.setItem('escritorio',values.escritorio);
         history.push('/escritorio')
     };
     
      const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
      };
+
+     if(usuario.escritorio && usuario.agente){ //Necesitamos utulizar el Return
+         return <Redirect to='/escritorio' />
+     }
     
     return (
       <>

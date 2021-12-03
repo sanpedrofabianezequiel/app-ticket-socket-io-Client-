@@ -1,12 +1,36 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Typography,List,Card,Tag, Row,Col, Divider} from 'antd';
 import { useHideMenu } from '../hooks/useHideMenu';
+import { SocketContext } from '../context/SocketContext';
+import { getUltimos } from '../helpers/getUltimos';
+
 
 const {Title,Text}  =  Typography;
 
 export const Cola = () => {
 
     useHideMenu(true);
+
+    const {socket} = useContext(SocketContext);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        console.log('entro')
+        socket.on('ticket-asignado',(data)=>{
+            console.log(data);
+            setData(data);
+        })
+        return () => {
+            socket.off('ticket-asignado');
+        }
+    
+    }, [socket])
+
+    useEffect(() => {
+        getUltimos()
+         .then( x=> setData(x.ultimos))
+         .catch(console.log)
+    }, [])
 
     return (
         <>
@@ -23,7 +47,7 @@ export const Cola = () => {
                                         <Tag color="magenta">Escritorio: {item.escritorio}</Tag>
                                     ]
                                 } >
-                                   <Title>No. {item.ticketNo} </Title>      
+                                   <Title>No. {item.number} </Title>      
                                 </Card>
                             </List.Item>
                         )}
@@ -37,11 +61,11 @@ export const Cola = () => {
                      renderItem={item =>(
                          <List.Item>
                              <List.Item.Meta 
-                                title={ `Ticket No. ${item.ticketNo}`}
+                                title={ `Ticket No. ${item.number}`}
                                 description={
                                     <>
                                         <Text type="secondary" >En el escritorio: </Text>
-                                        <Tag color="magenta" >{item.ticketNo}</Tag>
+                                        <Tag color="magenta" >{item.number}</Tag>
                                         <Text type="secondary" > Agente: </Text>
                                         <Tag color="volcano" >{item.agente}</Tag>
                                     </>
@@ -56,44 +80,3 @@ export const Cola = () => {
     )
 }
 
-
-
-
-
-const data = [
-    {
-        ticketNo: 33,
-        escritorio: 3,
-        agente: 'Fernando Herrera'
-    },
-    {
-        ticketNo: 34,
-        escritorio: 4,
-        agente: 'Melissa Flores'
-    },
-    {
-        ticketNo: 35,
-        escritorio: 5,
-        agente: 'Carlos Castro'
-    },
-    {
-        ticketNo: 36,
-        escritorio: 3,
-        agente: 'Fernando Herrera'
-    },
-    {
-        ticketNo: 37,
-        escritorio: 3,
-        agente: 'Fernando Herrera'
-    },
-    {
-        ticketNo: 38,
-        escritorio: 2,
-        agente: 'Melissa Flores'
-    },
-    {
-        ticketNo: 39,
-        escritorio: 5,
-        agente: 'Carlos Castro'
-    },
-];
